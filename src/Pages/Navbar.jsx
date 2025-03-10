@@ -1,12 +1,15 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Flex, Box, Text, Button, useDisclosure, IconButton, Stack } from '@chakra-ui/react';
-import { Link, useNavigate } from 'react-router-dom';
-import { LogOut } from '@/redux/action/authaction';
-import { FaHamburger, FaTimes } from 'react-icons/fa';
+import React,{useState} from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Flex,Box,Text, IconButton,Stack,Button} from "@chakra-ui/react";
+import { FaTimes,FaBars  } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { LogOut } from "@/redux/action/authaction";
+import { Link } from "react-router-dom";
+
 
 export default function Navbar() {
-  const { isOpen, onToggle } = useDisclosure();
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -14,71 +17,72 @@ export default function Navbar() {
   const handleLogout = () => {
     dispatch(LogOut());
     navigate('/');
+    setIsMenuOpen(false)
   };
 
   return (
     <Flex
       as="nav"
       align="center"
-      p={{ base: 4, md: 5 }}
-      color="teal.600"
-      width="100%"
-      bg="gray.100"
-      boxShadow="xl"
+      justify="space-between"  // Changed from flex-start for better distribution
+      p={{ base: 4, md: 6 }}
+      bg="teal.50"  // Softer background color
+      color="teal.800"
+      boxShadow="md"  // Softer shadow
       position="sticky"
-      top="3"
-      zIndex="sticky"
-      justify="flex-start"
+      top="0"  // Changed from 3 to stick properly at top
+      zIndex="1000"
+      width="100%"
     >
       {/* Title */}
-      <Text
-        fontSize={{ base: 'lg', md: 'xl' }}
-        fontWeight="semibold"
-        // fontFamily="mono"
-        // letterSpacing="wide"
-        color="teal.600"
-        pr={{base:6 ,md:8}}
-      >
-        Collaborative Story Creator
-      </Text>
+      <Box>
+        <Text
+          fontSize={{ base: 'xl', md: '2xl' }}
+          fontWeight="bold"
+          color="teal.700"
+          letterSpacing="wide"
+        >
+          Collaborative Story Creator
+        </Text>
+      </Box>
 
       {/* Navigation Links */}
       <Flex
-        ml={{ base: 4, md: 0 }}
-        position={{ md: 'absolute' }}
-        left={{ md: '50%' }}
-        transform={{ md: 'translateX(-50%)' }}
+        display={{ base: 'none', md: 'flex' }}  // Hide on mobile, show on desktop
         align="center"
-        gap={"40px"}
+        gap={{ base: "20px", md: "40px" }}
       >
         <Link to="/">
           <Text
-            fontSize={{ base: 'md', md: 'xl' }}
-            color="teal.600"
-            fontWeight="bold"
-            _hover={{ textDecoration: 'none', color: 'teal.800' }}
+            fontSize="lg"
+            fontWeight="medium"
+            color="teal.700"
+            _hover={{ color: 'teal.900', transform: 'translateY(-1px)' }}
+            transition="all 0.2s"
           >
             Home
           </Text>
         </Link>
         <Link to="/Books">
           <Text
-            fontSize={{ base: 'md', md: 'xl' }}
-            color="teal.600"
-            fontWeight="bold"
-            _hover={{ textDecoration: 'none', color: 'teal.800' }}
+            fontSize="lg"
+            fontWeight="medium"
+            color="teal.700"
+            _hover={{ color: 'teal.900', transform: 'translateY(-1px)' }}
+            transition="all 0.2s"
           >
-            OnGoingStories
+            Ongoing Stories
           </Text>
         </Link>
         <Link to="/completeStory">
           <Text
-            fontSize={{ base: 'md', md: 'xl' }}
-            color="teal.600"
-            fontWeight="bold"
-            _hover={{ textDecoration: 'none', color: 'teal.800' }}
+            fontSize="lg"
+            fontWeight="medium"
+            color="teal.700"
+            _hover={{ color: 'teal.900', transform: 'translateY(-1px)' }}
+            transition="all 0.2s"
           >
-            CompletedStories
+            Completed Stories
           </Text>
         </Link>
       </Flex>
@@ -86,28 +90,33 @@ export default function Navbar() {
       {/* Mobile Menu Button */}
       <IconButton
         display={{ base: 'flex', md: 'none' }}
-        icon={isOpen ? <FaTimes /> : <FaHamburger />}
+        icon={isMenuOpen ? <FaTimes /> : <FaBars />} // Fixed icons
+        onClick={() => setIsMenuOpen(!isMenuOpen)} // Direct state toggle
+        size="md"
+        fontSize="120px"
+      
         variant="ghost"
-        onClick={onToggle}
+        colorPalette="teal"
         aria-label="Toggle Navigation"
-        ml={2}
       />
 
       {/* User Section */}
-      <Flex ml="auto" align="center" gap={{ base: 2, md: 3 }}>
+      <Flex align="center" gap={{ base: 2, md: 4 }}>
         {user ? (
           <>
             <Text
-              fontSize={{ base: 'md', md: 'xl' }}
-              fontStyle="italic"
-              display={{ base: 'none', md: 'block' }} // Hide welcome text on small screens to save space
+              fontSize={{ base: 'sm', md: 'lg' }}
+              color="teal.800"
+              display={{ base: 'none', md: 'block' }}
             >
               Welcome, {user.fullName}
             </Text>
             <Button
-              colorPalette="teal" 
+              colorScheme="teal"
+              variant="outline"
               size={{ base: 'sm', md: 'md' }}
               onClick={handleLogout}
+              _hover={{ bg: 'teal.100' }}
             >
               Logout
             </Button>
@@ -116,69 +125,54 @@ export default function Navbar() {
           <>
             <Link to="/login">
               <Button
-              colorPalette="teal" 
+                colorPalette="teal"
+                variant="outline"
                 size={{ base: 'sm', md: 'md' }}
+                _hover={{ bg: 'teal.100' }}
               >
                 Sign In
               </Button>
             </Link>
             <Link to="/signup">
-              <Text
-                fontSize={{ base: 'md', md: 'xl' }}
-                _hover={{ textDecoration: 'none', color: 'teal.800' }}
+              <Button
+                colorPalette="teal"
+                size={{ base: 'sm', md: 'md' }}
+                _hover={{ bg: 'teal.100' }}
               >
                 Register
-              </Text>
+              </Button>
             </Link>
           </>
         )}
       </Flex>
 
       {/* Mobile Menu */}
-      {isOpen && (
+      {isMenuOpen  && (
         <Box
           position="absolute"
           top="100%"
           left="0"
           width="100%"
-          bg="gray.100"
+          bg="teal.50"
+          zIndex={1}
           p={4}
           boxShadow="md"
           display={{ base: 'block', md: 'none' }}
         >
           <Stack spacing={4}>
-            <Link to="/" onClick={onToggle}>
-              <Text fontSize="xl" color="teal.600">
-                Home
-              </Text>
+            <Link to="/" onClick={() => setIsMenuOpen(false)}>
+              <Text fontSize="lg" color="teal.700">Home</Text>
             </Link>
-            {user ? (
-              <>
-                <Text fontSize="lg">Welcome, {user.fullName}</Text>
-                <Button
-                  colorScheme="teal"
-                  size="md"
-                  onClick={() => {
-                    handleLogout();
-                    onToggle();
-                  }}
-                >
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" onClick={onToggle}>
-                  <Button colorScheme="teal" size="md">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link to="/signup" onClick={onToggle}>
-                  <Text fontSize="lg" color="teal.600">
-                    Register
-                  </Text>
-                </Link>
-              </>
+            <Link to="/Books" onClick={() => setIsMenuOpen(false)}>
+              <Text fontSize="lg" color="teal.700">Ongoing Stories</Text>
+            </Link>
+            <Link to="/completeStory" onClick={() => setIsMenuOpen(false)}>
+              <Text fontSize="lg" color="teal.700">Completed Stories</Text>
+            </Link>
+            {user && (
+              <Text fontSize="lg" color="teal.700">
+                Welcome, {user.fullName}
+              </Text>
             )}
           </Stack>
         </Box>

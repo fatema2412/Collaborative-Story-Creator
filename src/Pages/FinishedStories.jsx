@@ -33,12 +33,12 @@ import { fetchPosts } from "@/redux/action/bookaction";
             borderRadius="md"
             bg="white"
             boxShadow="md"
-            _hover={{ boxShadow: "lg", bg: "gray.50" }}
+            _hover={{ boxShadow: "lg", bg: "teal.50" }}
           >
             <Text fontSize="2xl" fontWeight="bold" color="teal.600" mb={2}>
               Title: '{data.title}'
             </Text>
-            <Text fontSize="lg" color="gray.600" mb={3}>
+            <Text fontSize="lg" color="teal.200" mb={3}>
               Created by <strong>{data.author}</strong>
             </Text>
             <Text fontSize="lg"  p={3} borderRadius="md">

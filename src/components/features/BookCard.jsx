@@ -108,7 +108,7 @@ export default function BookCard({data}) {
     <Text fontSize="lg"  p={3} borderRadius="md"> <strong > Inital Sentence  is </strong> {data.sentence}</Text>
     {data.contributions && contributionsArray.length>0 && 
                    
-      <Box mt={4} bg="gray.100" p={3} borderRadius="md">
+      <Box mt={4} bg="teal.50" p={3} borderRadius="md">
                         <Heading size="xl" color="teal.500" mb={2}>
                           Contributions
                         </Heading>
@@ -154,7 +154,7 @@ export default function BookCard({data}) {
 
 
            
-          
+     {!data && <Text>No Stories Yet</Text>}     
 
     </Box>
    
